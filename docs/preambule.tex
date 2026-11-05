@@ -1,0 +1,131 @@
+% =====================================================================
+%  Préambule — compatible pdfLaTeX (Overleaf par défaut), XeLaTeX et LuaLaTeX
+% =====================================================================
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\fi
+\usepackage{amsmath}
+\usepackage[french]{babel}
+\usepackage{libertinus}
+\usepackage{microtype}
+
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.4cm,right=2.4cm,headheight=14pt]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+
+\usepackage[locale=FR,per-mode=symbol,group-minimum-digits=4]{siunitx}
+\sisetup{range-phrase={\,\text{à}\,},list-final-separator={ et },inter-unit-product=\ensuremath{\cdot}}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{pdflscape}
+\usepackage{eso-pic}
+
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{babel}
+\usetikzlibrary{arrows.meta,positioning,fit,calc}
+
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage[french,nameinlink]{cleveref}
+
+% ---------------------------------------------------------------------
+%  Couleurs
+% ---------------------------------------------------------------------
+\definecolor{pslbleu}{HTML}{1F4E8C}
+\definecolor{pslbleuclair}{HTML}{E8EEF7}
+\definecolor{pslorange}{HTML}{E8781A}
+\definecolor{pslorangeclair}{HTML}{FDF0E4}
+\definecolor{pslvert}{HTML}{2E7D4F}
+\definecolor{pslvertclair}{HTML}{E7F3EC}
+\definecolor{pslrouge}{HTML}{B3261E}
+\definecolor{pslrougeclair}{HTML}{FBEAE9}
+\definecolor{pslgris}{HTML}{5F6368}
+
+\hypersetup{colorlinks=true,linkcolor=pslbleu,urlcolor=pslbleu,citecolor=pslbleu,
+  pdftitle={OpenFlexure USB — Microscope en périphérique USB},
+  pdfauthor={Tom Penfornis},pdfsubject={Liaison USB gadget et mise à l'heure}}
+
+% ---------------------------------------------------------------------
+%  Titres et en-têtes
+% ---------------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\color{pslbleu}}
+  {\large\MakeUppercase{\chaptertitlename}~\thechapter}
+  {4pt}
+  {\Huge\bfseries}
+  [\vspace{4pt}{\color{pslorange}\titlerule[1.5pt]}]
+\titlespacing*{\chapter}{0pt}{-10pt}{24pt}
+\titleformat{\section}{\normalfont\sffamily\Large\bfseries\color{pslbleu}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\sffamily\large\bfseries\color{pslbleu!85!black}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalfont\sffamily\normalsize\bfseries}{\thesubsubsection}{0.8em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{pslgris}OpenFlexure USB — Rapport technique}
+\fancyhead[R]{\small\sffamily\color{pslgris}\nouppercase{\leftmark}}
+\fancyfoot[C]{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{{\color{pslbleu!40}\hrule height\headrulewidth width\headwidth\vskip-\headrulewidth}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\sffamily\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\setlength{\parskip}{0.35em}
+\setlist{itemsep=2pt,topsep=4pt}
+
+\captionsetup{font=small,labelfont={bf,sf,color=pslbleu},format=hang,margin=10pt}
+\captionsetup[table]{position=top}
+\renewcommand{\arraystretch}{1.18}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+% ---------------------------------------------------------------------
+%  Encadrés
+% ---------------------------------------------------------------------
+\newtcolorbox{synthese}[1][Synthèse]{enhanced,breakable,colback=pslbleuclair,colframe=pslbleu,
+  fonttitle=\sffamily\bfseries,title={#1},arc=2pt,boxrule=0.6pt,left=6pt,right=6pt}
+\newtcolorbox{choix}[1][Choix retenu]{enhanced,breakable,colback=pslvertclair,colframe=pslvert,
+  fonttitle=\sffamily\bfseries,title={#1},arc=2pt,boxrule=0.6pt,left=6pt,right=6pt}
+\newtcolorbox{attention}[1][Point de vigilance]{enhanced,breakable,colback=pslrougeclair,colframe=pslrouge,
+  fonttitle=\sffamily\bfseries,title={#1},arc=2pt,boxrule=0.6pt,left=6pt,right=6pt}
+\newtcolorbox{calcul}[1][Calcul]{enhanced,breakable,colback=white,colframe=pslorange,
+  fonttitle=\sffamily\bfseries,coltitle=black,colbacktitle=pslorangeclair,title={#1},arc=2pt,boxrule=0.6pt,left=6pt,right=6pt}
+
+% ---------------------------------------------------------------------
+%  Code
+% ---------------------------------------------------------------------
+\lstdefinestyle{psl}{basicstyle=\ttfamily\footnotesize,keywordstyle=\color{pslbleu},
+  commentstyle=\color{pslgris}\itshape,stringstyle=\color{pslorange!80!black},numbers=left,
+  numberstyle=\tiny\color{pslgris},frame=single,rulecolor=\color{pslbleu!30},backgroundcolor=\color{pslbleuclair!40},
+  breaklines=true,columns=fullflexible,keepspaces=true,showstringspaces=false,
+  literate={é}{{\'e}}1 {è}{{\`e}}1 {à}{{\`a}}1 {ç}{{\c{c}}}1 {ê}{{\^e}}1 {É}{{\'E}}1 {ô}{{\^o}}1 {î}{{\^i}}1 {û}{{\^u}}1 {ù}{{\`u}}1 {Ø}{{\O}}1 {×}{{$\times$}}1 {â}{{\^a}}1 {⇄}{{$\leftrightarrows$}}1 {→}{{$\rightarrow$}}1 {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1 {À}{{\`A}}1}
+\lstset{style=psl}
+
+% ---------------------------------------------------------------------
+%  Raccourcis
+% ---------------------------------------------------------------------
+\newcommand{\comp}[1]{\textsf{#1}}
+\newcommand{\fichier}[1]{{\small\nolinkurl{#1}}}
+
+% Pas de citation (lien dans un lien) dans les listes des figures et des tableaux
+\let\listoffiguresorig\listoffigures
+\let\listoftablesorig\listoftables
+\renewcommand{\listoffigures}{\begingroup\renewcommand{\cite}[2][]{}\listoffiguresorig\endgroup}
+\renewcommand{\listoftables}{\begingroup\renewcommand{\cite}[2][]{}\listoftablesorig\endgroup}
+\crefname{lstlisting}{listing}{listings}
+\Crefname{lstlisting}{Listing}{Listings}

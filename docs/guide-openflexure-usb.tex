@@ -1,0 +1,280 @@
+% =====================================================================
+%  OpenFlexure USB — Guide accessible à tous
+%  Compilation : pdfLaTeX (Overleaf par défaut) ; XeLaTeX et LuaLaTeX acceptés.
+% =====================================================================
+\documentclass[11pt,a4paper,openany]{report}
+\input{preambule}
+
+\hypersetup{pdftitle={Un microscope OpenFlexure utilisable partout, sans réseau},
+  pdfsubject={Guide d'utilisation de la liaison USB}}
+\fancyhead[L]{\small\sffamily\color{pslgris}OpenFlexure USB — Guide}
+\newcommand{\ip}[1]{\texttt{#1}}
+\newcommand{\oui}{\textcolor{pslvert}{\ding{51}}}
+\newcommand{\nonteste}{\textcolor{pslorange}{\ding{108}}}
+\newcommand{\marque}[1]{\tikz[remember picture,overlay]\coordinate (#1);}
+
+\begin{document}
+
+\pagenumbering{Alph}
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[pslbleu] (current page.north west) rectangle ([yshift=-8.2cm]current page.north east);
+  \fill[pslorange] ([yshift=-8.2cm]current page.north west) rectangle ([yshift=-8.5cm]current page.north east);
+  \node[anchor=north west,text=white!85!pslbleu,font=\sffamily\small,inner sep=0pt] at ([xshift=2.4cm,yshift=-1.7cm]current page.north west) {Projet OpenFlexure USB};
+  \node[anchor=north west,text=white,font=\sffamily\bfseries\fontsize{30}{36}\selectfont,inner sep=0pt,text width=16.5cm] at ([xshift=2.4cm,yshift=-2.6cm]current page.north west) {Un microscope utilisable partout, sans réseau};
+  \node[anchor=north west,text=white!90!pslbleu,font=\sffamily\Large,inner sep=0pt,text width=16cm] at ([xshift=2.4cm,yshift=-6.25cm]current page.north west) {Un câble USB, un ordinateur, un navigateur};
+\end{tikzpicture}
+
+\vspace*{8.2cm}
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\small,
+  boite/.style={draw=pslbleu,fill=pslbleuclair,rounded corners=3pt,minimum height=1.5cm,align=center,line width=0.8pt},
+  lien/.style={line width=1.4pt,pslorange}]
+  \node[boite,minimum width=3.8cm] (pc) {\textbf{Votre ordinateur}\\navigateur web};
+  \node[boite,minimum width=3.8cm,right=4.2cm of pc] (pi) {\textbf{Microscope}\\OpenFlexure};
+  \draw[lien,{Latex}-{Latex}] (pc) -- node[above,text=black]{câble USB-C} node[below,text=black,font=\sffamily\footnotesize]{ni Wi-Fi, ni Internet} (pi);
+\end{tikzpicture}
+\end{center}
+\vfill
+{\sffamily
+\begin{tabularx}{\textwidth}{@{}lL@{}}
+\toprule
+\textbf{Pour qui} & Chercheurs sur le terrain, enseignants, makers et toute personne utilisant un microscope OpenFlexure sans réseau disponible \\
+\textbf{Prérequis} & Aucune connaissance en informatique pour l'utilisation ; quelques commandes pour l'installation \\
+\textbf{Auteur} & Tom Penfornis \\
+\textbf{Version} & 1.0 --- 30 octobre 2026 \\
+\bottomrule
+\end{tabularx}}
+\end{titlepage}
+
+\pagenumbering{roman}
+\chapter*{L'essentiel en une page}
+\addcontentsline{toc}{chapter}{L'essentiel en une page}
+
+\begin{synthese}[En bref]
+Le microscope OpenFlexure est un microscope open source, fabriqué en grande partie par impression 3D. On l'utilise depuis un navigateur web, mais il faut pour cela le relier à un réseau.
+
+Ce projet supprime cette contrainte : \textbf{on branche le microscope à un ordinateur avec un câble USB-C, on ouvre une page web, et c'est tout.}
+\end{synthese}
+
+\begin{itemize}
+  \item \textbf{Sans connexion :} aucun Wi-Fi, Internet ou box n'est nécessaire.
+  \item \textbf{Sans logiciel à installer} sur l'ordinateur : un navigateur suffit.
+  \item \textbf{Images bien datées :} le microscope récupère l'heure de l'ordinateur, même hors ligne.
+  \item \textbf{Un seul câble possible :} il peut transporter à la fois l'alimentation et les commandes.
+  \item \textbf{Réversible :} l'installation peut être désinstallée.
+\end{itemize}
+
+\begin{attention}[Où en est le projet ?]
+La liaison fonctionne sous Linux, Windows et macOS. En revanche, \textbf{le montage n'a pas encore été utilisé sur un vrai terrain}. Le \cref{chap-etat} détaille ce qui est prouvé et ce qui ne l'est pas.
+\end{attention}
+
+\tableofcontents
+\cleardoublepage
+\pagenumbering{arabic}
+
+% =====================================================================
+\chapter{Pourquoi ce projet ?}
+% =====================================================================
+
+\section{Le problème}
+Le microscope OpenFlexure contient un petit ordinateur, un Raspberry Pi. Pour le commander depuis un autre ordinateur, on passe habituellement par un réseau. Or, ce réseau n'existe pas toujours :
+\begin{itemize}
+  \item \textbf{sur le terrain} (mission, station isolée, zone sans couverture), il n'y a parfois ni connexion ni box Wi-Fi ;
+  \item \textbf{dans une école ou un petit laboratoire}, l'accès au réseau peut être indisponible ou compliqué à obtenir ;
+  \item \textbf{dans certains établissements}, le réseau est réservé aux appareils enregistrés.
+\end{itemize}
+
+\section{La solution}
+Le microscope se présente à l'ordinateur comme une \textbf{petite carte réseau USB}. Il suffit d'un câble entre les deux. C'est comme un mini-réseau privé de deux appareils : l'ordinateur et le microscope, rien d'autre.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\sffamily\small,
+  boite/.style={draw=pslbleu,fill=pslbleuclair,rounded corners=3pt,minimum height=1.2cm,minimum width=3.2cm,align=center},
+  barre/.style={draw=pslgris,fill=white,rounded corners=3pt,minimum height=1.2cm,minimum width=3.2cm,align=center,text=pslgris},
+  fl/.style={{Latex}-{Latex},line width=1.2pt}]
+  \node[font=\sffamily\bfseries,text=pslgris] at (3.5,1.2) {Avant};
+  \node[boite] (a1) at (0,0) {Ordinateur};
+  \node[barre] (a2) at (3.5,0) {Réseau\\obligatoire};
+  \node[boite] (a3) at (7,0) {Microscope};
+  \draw[fl,pslgris] (a1) -- (a2);
+  \draw[fl,pslgris] (a2) -- (a3);
+  \node[font=\sffamily\bfseries,text=pslorange!80!black] at (3.5,-1.3) {Avec ce projet};
+  \node[boite] (b1) at (0,-2.5) {Ordinateur};
+  \node[boite] (b3) at (7,-2.5) {Microscope};
+  \draw[fl,pslorange] (b1) -- node[above,text=black]{câble USB-C} (b3);
+\end{tikzpicture}
+\caption{Le réseau intermédiaire est remplacé par un simple câble}
+\end{figure}
+
+\section{Et l'heure des images ?}
+Une image scientifique doit être correctement datée. Or, le Raspberry Pi n'a pas d'horloge à pile : sans Internet, il repart de la dernière heure connue, qui peut dater de plusieurs jours.
+
+La page d'accueil règle ce problème : quand vous l'ouvrez, votre ordinateur transmet son heure au microscope. Il n'y a rien à faire, mais il faut bien passer par cette page. La date des images dépend donc de la bonne heure de votre ordinateur.
+
+% =====================================================================
+\chapter{Utiliser le microscope}
+% =====================================================================
+
+\section{Ce qu'il vous faut}
+\begin{itemize}
+  \item un microscope OpenFlexure équipé d'un Raspberry Pi~4 (4\,Go ou plus) et d'une Sangaboard~v5, avec la liaison USB installée (\cref{chap-installation}) ;
+  \item un ordinateur avec un navigateur web, de préférence avec un port USB-C ;
+  \item un câble USB-C capable de transporter des \textbf{données} : certains câbles ne servent qu'à la recharge.
+\end{itemize}
+
+\section{Le branchement : à lire en premier}
+\begin{attention}[Une seule source de courant à la fois]
+\textbf{Ne branchez jamais l'ordinateur au Raspberry Pi pendant que la Sangaboard reçoit du courant par son propre port USB-C}, sauf avec un bloqueur de 5\,V. Les deux sources seraient reliées directement, ce qui peut endommager le matériel.
+\end{attention}
+
+\begin{table}[H]
+\centering
+\caption{Les deux montages possibles}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\bfseries}p{3cm}LL@{}}
+\toprule
+& \marque{cadrehaut}Un seul câble & \marque{cadredroite}Alimentation séparée \\
+\midrule
+Branchement & Ordinateur vers USB-C du Pi ; rien sur l'USB-C de la Sangaboard & Alimentation vers USB-C de la Sangaboard ; ordinateur vers USB-C du Pi à travers un bloqueur de 5\,V \\
+Avantage & Très simple : idéal lorsqu'on n'a pas de prise électrique & Ne sollicite pas la batterie de l'ordinateur \\
+Limite & Dépend de la puissance du port ; vide plus vite la batterie du portable & Demande une prise (ou une batterie externe) et un accessoire \\
+État & Testé sur un seul ordinateur, moteurs compris\marque{cadrebas} & Pas encore testé \\
+\bottomrule
+\end{tabularx}
+\begin{tikzpicture}[remember picture,overlay]
+  \draw[pslvert,line width=0.5pt,rounded corners=2pt] ($(cadrehaut)+(-5pt,12pt)$) rectangle ($(cadredroite |- cadrebas)+(-7pt,-5pt)$);
+\end{tikzpicture}
+\end{table}
+
+\section{Pas à pas}
+\begin{enumerate}
+  \item Branchez le microscope selon l'un des deux montages.
+  \item Attendez environ une minute, le temps que le microscope démarre.
+  \item Sur l'ordinateur, ouvrez votre navigateur et saisissez \textbf{\ip{http://10.55.0.1}}. Enregistrez cette adresse en favori.
+  \item Un message confirme la mise à l'heure, puis l'interface du microscope s'affiche.
+  \item En fin de séance, cliquez sur le bouton « Éteindre » de l'interface, attendez l'arrêt, puis débranchez.
+\end{enumerate}
+
+\begin{choix}[Bon réflexe avant de partir sur le terrain]
+Faites un essai complet à la maison ou au laboratoire, \textbf{Wi-Fi coupé} et sur batterie, avec l'ordinateur que vous emporterez. Vérifiez que les moteurs fonctionnent, que l'heure est juste et notez l'autonomie obtenue. Le bouton d'extinction évite de corrompre la carte SD.
+\end{choix}
+
+\section{En cas de problème}
+\begin{table}[H]
+\centering
+\caption{Problèmes courants}
+\small
+\begin{tabularx}{\textwidth}{@{}p{5.2cm}L@{}}
+\toprule
+Ce que vous constatez & Ce qu'il faut essayer \\
+\midrule
+La page ne s'ouvre pas & Attendez une minute après la mise sous tension, puis changez de câble : il ne transporte peut-être pas les données \\
+Le microscope s'éteint ou redémarre & Le port USB ne fournit sans doute pas assez de courant : essayez un autre port USB-C ou une alimentation séparée \\
+L'heure des images est fausse & Passez bien par \ip{http://10.55.0.1}, et non directement par l'adresse se terminant par \ip{:5000} ; vérifiez l'heure de l'ordinateur \\
+Ça ne marche pas sur un ordinateur professionnel & Un proxy, un pare-feu ou une règle USB peut bloquer la liaison : demandez de l'aide au service informatique \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\chapter{Où en est le projet ?}
+\label{chap-etat}
+% =====================================================================
+
+Le tableau distingue ce qui a réellement été vérifié de ce qui reste à prouver.
+
+\begin{table}[H]
+\centering
+\caption{État des tests (\oui{} vérifié, \nonteste{} pas encore vérifié)}
+\small
+\begin{tabularx}{\textwidth}{@{}LLc@{}}
+\toprule
+Point vérifié & Résultat & \\
+\midrule
+Connexion USB automatique & La liaison revient seule après un redémarrage & \oui \\
+Ordinateur sous Linux & Fonctionne (Debian~12) & \oui \\
+Ordinateur sous Windows & Fonctionne & \oui \\
+Ordinateur sous macOS & Fonctionne & \oui \\
+Mise à l'heure sans Internet & Microscope déréglé remis à l'heure, Wi-Fi coupé & \oui \\
+Image copiée sur une carte SD neuve & Démarrage et fonctionnement validés & \oui \\
+Moteurs alimentés par un seul câble & Fonctionne, sur un seul ordinateur & \oui \\
+Autres ordinateurs portables & Le courant disponible varie selon le modèle & \nonteste \\
+Autonomie sur batterie & Pas encore mesurée & \nonteste \\
+Bloqueur de 5\,V & Pas encore essayé & \nonteste \\
+Mission réelle (chaleur, poussière, transport) & Pas encore réalisée & \nonteste \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Le matériel utilisé pour ces essais est un Raspberry Pi~4 avec une Sangaboard~v5 et la version bêta 3.0.0 d'OpenFlexure. Cette version est encore en développement : une mise à jour peut obliger à relancer l'installation.
+
+Une batterie intégrée au boîtier est à l'étude. Elle n'est pas encore assez avancée pour être partagée.
+
+% =====================================================================
+\chapter{Installer la liaison USB}
+\label{chap-installation}
+% =====================================================================
+
+Cette étape n'est à faire qu'une fois. Elle demande quelques commandes ; une personne habituée à Linux pourra s'en charger en quelques minutes.
+
+\begin{enumerate}
+  \item Installez OpenFlexure en version 3 bêta en suivant les instructions officielles : \url{https://openflexure.org/projects/microscope/install}.
+  \item Téléchargez ce projet et copiez le script \fichier{scripts/ofm-usb-install.sh} sur le Raspberry Pi.
+  \item Sur le Raspberry Pi, lancez les commandes suivantes :
+\end{enumerate}
+\begin{lstlisting}[language=bash,numbers=none]
+sudo ./ofm-usb-install.sh / /boot/firmware
+sudo reboot
+\end{lstlisting}
+
+Pour tout retirer, utilisez la même commande en ajoutant \ip{-{}-uninstall} juste après le nom du script. Les détails techniques et la liste des éléments modifiés se trouvent dans le fichier \fichier{README.md} du projet.
+
+\begin{attention}[Vous partagez une carte SD avec d'autres personnes ?]
+Créez une image avec \fichier{scripts/ofm-image.sh} : elle retire les mots de passe, le Wi-Fi, les images enregistrées et l'étalonnage, puis liste les fichiers restants. Relisez cette liste avant de partager. Le fichier \fichier{README.md} explique la marche à suivre.
+\end{attention}
+
+% =====================================================================
+\chapter{Questions fréquentes}
+% =====================================================================
+
+\paragraph{Ai-je besoin d'Internet, même une seule fois ?}
+Pour utiliser le microscope, non. Internet ne sert qu'à l'installation initiale, pour télécharger les fichiers.
+
+\paragraph{Mon ordinateur perd-il sa connexion quand le microscope est branché ?}
+Non. Le câble ne sert qu'à parler au microscope ; l'ordinateur conserve sa connexion habituelle s'il en a une.
+
+\paragraph{Le microscope est-il accessible à d'autres personnes ?}
+Avec cette liaison, seul l'ordinateur relié par le câble peut le joindre. Si le Wi-Fi du microscope reste activé, il reste aussi joignable par ce réseau.
+
+\paragraph{Peut-on l'utiliser dans un hôpital ou une entreprise ?}
+Le microscope n'est pas raccordé au réseau de l'établissement et aucune protection n'est contournée. Il faut cependant respecter ses règles sur les périphériques USB : demandez l'avis du service informatique. Ce montage n'est pas un dispositif médical.
+
+\paragraph{Puis-je utiliser une tablette ou un téléphone ?}
+Cela n'a pas été testé.
+
+\paragraph{Est-ce gratuit ?}
+Oui. Les scripts sont libres, sous licence GPL version~3 ou ultérieure. OpenFlexure est un projet indépendant : son logiciel serveur est sous GPL~3 et son matériel sous licence CERN-OHL-S~2.0.
+
+% =====================================================================
+\chapter{Petit lexique}
+% =====================================================================
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}>{\bfseries}p{3.8cm}L@{}}
+\toprule
+Bloqueur de 5\,V & Petit adaptateur USB qui laisse passer les données mais pas le courant. Attention, il ne s'agit pas d'un « data blocker », qui fait l'inverse \\
+Carte SD & Petite carte mémoire contenant le système du microscope \\
+Navigateur & Logiciel pour afficher des pages web (Firefox, Chrome, Edge\dots) \\
+Raspberry Pi & Petit ordinateur intégré au microscope \\
+Sangaboard & Carte électronique qui commande les moteurs \\
+USB-C & Prise USB moderne, ovale et réversible \\
+\ip{10.55.0.1} & Adresse du microscope sur le mini-réseau créé par le câble \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\end{document}
