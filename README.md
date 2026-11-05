@@ -33,15 +33,15 @@ Le câble ne donne accès qu'au microscope : aucune passerelle ni DNS n'est tran
 
 | Élément | État |
 |---|---|
-| Liaison USB automatique et redémarrage | ✅ validés |
-| Mise à l'heure sans Internet | ✅ validée |
-| Linux (Debian 12) | ✅ testé |
-| Windows | ✅ testé |
-| macOS | ✅ testé |
-| Alimentation et moteurs par un seul câble | ✅ testés sur un seul ordinateur |
-| Autres ordinateurs portables, autonomie | ⏳ non mesurés |
-| Utilisation en conditions réelles de terrain | ⏳ pas encore réalisée |
-| Batterie intégrée | 🚧 en développement, non publiée |
+| Liaison USB automatique et redémarrage |  validés |
+| Mise à l'heure sans Internet |  validée |
+| Linux (Debian 12) |  testé |
+| Windows |  testé |
+| macOS |  testé |
+| Alimentation et moteurs par un seul câble |  testés sur un seul ordinateur |
+| Autres ordinateurs portables, autonomie |  non mesurés |
+| Utilisation en conditions réelles de terrain |  pas encore réalisée |
+| Batterie intégrée |  en développement, non publiée |
 
 Configuration testée : OpenFlexure v3.0.0-beta1, Raspberry Pi OS Trixie, Raspberry Pi 4, Sangaboard v5. OpenFlexure v3 demande un Pi 4 de 4 Go ou plus. La v3 d'OpenFlexure est encore une bêta et une mise à jour peut demander de relancer le script.
 
