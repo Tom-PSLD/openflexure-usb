@@ -8,6 +8,8 @@ Ce projet permet de piloter un [microscope OpenFlexure](https://openflexure.org)
 - aux **laboratoires, écoles et ateliers** sans infrastructure réseau disponible ;
 - aux **établissements** dont le réseau n'accepte pas d'appareils extérieurs.
 
+**[Télécharger l'image prête à flasher](https://github.com/Tom-PSLD/openflexure-usb/releases)** : rien à installer, il suffit de la copier sur une carte SD.
+
 📄 **[Guide illustré, accessible sans connaissances techniques](docs/guide-openflexure-usb.pdf)**
 
 ## Comment ça marche
@@ -47,7 +49,21 @@ Configuration testée : OpenFlexure v3.0.0-beta1, Raspberry Pi OS Trixie, Raspbe
 
 ## Installation
 
-Il faut un microscope qui fonctionne déjà avec l'image **OpenFlexure v3 bêta** officielle ([instructions d'installation](https://openflexure.org/projects/microscope/install)).
+Deux possibilités : flasher l'image toute prête (le plus simple), ou ajouter le mode USB à une carte OpenFlexure existante.
+
+### Option 1 : l'image prête à flasher (conseillé)
+
+1. Téléchargez le fichier `.img.xz` et son `.sha256` depuis la page [Releases](https://github.com/Tom-PSLD/openflexure-usb/releases).
+2. Vérifiez le fichier (facultatif) : `sha256sum -c openflexure-usb-peripherique-*.img.xz.sha256`.
+3. Ouvrez [Raspberry Pi Imager](https://www.raspberrypi.com/software/), choisissez « Utiliser une image personnalisée », puis une carte SD de **16 Go minimum**.
+4. **Refusez la personnalisation de l'OS** proposée par Imager.
+5. Mettez la carte dans le Pi, lisez la section « Alimentation » plus bas, branchez le câble USB-C, puis ouvrez **http://10.55.0.1**. Le premier démarrage est un peu plus long.
+
+L'image a le Wi-Fi coupé et ne contient aucun mot de passe ni étalonnage : refaites l'étalonnage de la caméra et de la platine au premier lancement.
+
+### Option 2 : ajouter le mode USB à une carte existante
+
+Il faut un microscope qui fonctionne déjà avec l'image **OpenFlexure v3 bêta** officielle ([instructions d'installation](https://openflexure.org/projects/microscope/install)). Le Wi-Fi reste alors actif en plus de l'USB.
 
 **Depuis le Raspberry Pi :**
 
@@ -116,7 +132,7 @@ sudo ./scripts/ofm-image.sh /dev/sdX ./image 'ssid=MonWifi'
 
 Chaque motif donné après le dossier de sortie est recherché dans l'image, et sa présence arrête la création.
 
-Aucune image prête à flasher n'est publiée pour l'instant. Une image validée sera proposée dans les *Releases* du dépôt.
+C'est ce script qui a servi à créer l'image proposée dans les [Releases](https://github.com/Tom-PSLD/openflexure-usb/releases).
 
 ## Usage en établissement
 
