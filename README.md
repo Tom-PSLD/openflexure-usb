@@ -8,7 +8,15 @@ Ce projet permet de piloter un [microscope OpenFlexure](https://openflexure.org)
 - aux **laboratoires, écoles et ateliers** sans infrastructure réseau disponible ;
 - aux **établissements** dont le réseau n'accepte pas d'appareils extérieurs.
 
-**[Télécharger l'image prête à flasher](https://github.com/Tom-PSLD/openflexure-usb/releases)** : rien à installer, il suffit de la copier sur une carte SD.
+## Démarrage rapide
+
+La [Release](https://github.com/Tom-PSLD/openflexure-usb/releases) contient une image complète pour Raspberry Pi : Raspberry Pi OS, OpenFlexure et le mode USB, déjà installés et configurés.
+
+1. Téléchargez l'image `.img.xz` depuis la [Release](https://github.com/Tom-PSLD/openflexure-usb/releases).
+2. Écrivez-la sur une carte SD avec [Raspberry Pi Imager](https://www.raspberrypi.com/software/) (« Utiliser une image personnalisée »).
+3. Mettez la carte dans le Pi du microscope, branchez-le à l'ordinateur en USB-C (lisez avant la section « Alimentation ») et ouvrez **http://10.55.0.1**.
+
+Rien d'autre à installer : ni OpenFlexure, ni script, ni pilote. Les détails sont dans la section [Installation](#installation).
 
 📄 **[Guide illustré, accessible sans connaissances techniques](docs/guide-openflexure-usb.pdf)**
 
@@ -51,7 +59,9 @@ Configuration testée : OpenFlexure v3.0.0-beta1, Raspberry Pi OS Trixie, Raspbe
 
 Deux possibilités : flasher l'image toute prête (le plus simple), ou ajouter le mode USB à une carte OpenFlexure existante.
 
-### Option 1 : l'image prête à flasher (conseillé)
+### Option 1 : flasher l'image de la Release avec Raspberry Pi Imager (conseillé)
+
+Aucune installation préalable : l'image remplace tout le contenu de la carte SD.
 
 1. Téléchargez le fichier `.img.xz` et son `.sha256` depuis la page [Releases](https://github.com/Tom-PSLD/openflexure-usb/releases).
 2. Vérifiez le fichier (facultatif) : `sha256sum -c openflexure-usb-peripherique-*.img.xz.sha256`.
